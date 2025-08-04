@@ -1,0 +1,43 @@
+services:
+  namenode:
+    build: .
+    container_name: namenode
+    hostname: namenode
+    ports:
+      - "9870:9870"
+      - "9000:9000"
+      - "8088:8088"   # ResourceManager UI (se estiver rodando YARN)
+    networks:
+      - hadoop
+    volumes:
+      - namenode_data:/hadoop/dfs/name
+
+  datanode1:
+    build: .
+    container_name: datanode1
+    hostname: datanode1
+    networks:
+      - hadoop
+    volumes:
+      - datanode1_data:/hadoop/dfs/data
+    depends_on:
+      - namenode
+
+  datanode2:
+    build: .
+    container_name: datanode2
+    hostname: datanode2
+    networks:
+      - hadoop
+    volumes:
+      - datanode2_data:/hadoop/dfs/data
+    depends_on:
+      - namenode
+
+volumes:
+  namenode_data:
+  datanode1_data:
+  datanode2_data:
+
+networks:
+  hadoop:
